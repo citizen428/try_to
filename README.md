@@ -1,6 +1,6 @@
 # Tryit
 
-Another approach to Rail's `Object#try`. This is the result of a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428).
+Another approach to Rail's `Object#try`. This is the result of a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428). The original repository can be found at [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit).
 
 Instead of
 

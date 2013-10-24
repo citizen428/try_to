@@ -1,18 +1,16 @@
-require "tryit/version"
-
 class TryIt
   class << self
     attr_accessor :exceptions, :handler
   end
 
-  @exceptions = [NoMethodError]
-  @handler = lambda { |_| nil }
+  self.exceptions = [NoMethodError]
+  self.handler = lambda { |_| nil } # like Object#try in Rails
 end
 
 class Object
   def tryit(*args, &block)
     if args.empty? && block_given?
-      instance_eval &block
+      instance_eval(&block)
     else
       send(*args, &block)
     end
