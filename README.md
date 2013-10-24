@@ -1,34 +1,81 @@
-# Tryit
+# try_to
 
-Another approach to Rail's `Object#try`. This is the result of a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428). The original repository can be found at [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit).
+This project started with a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428), which eventually lead to a prototype at [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit). `try_to` is an improved version based on the experience gained from that project, but allows for much more sophisticated error handling (in less than 30 lines of Ruby).
 
-Instead of
+Instead of using Rails' `Object#try` like this,
 
     obj1.try(:met1).try(:met2).try(:met3).to_s
 
-you can do this
+you can do this:
 
-    obj1.tryit { met1.met2.met3.to_s }
+    try_to { obj.met1.met2.met3.to_s }
 
-or this (the preferred form):
+It's possible to customize which exceptions to handle:
 
-    tryit { obj.met1.met2.met3.to_s }
+    TryTo.exceptions << ZeroDivisionError
+    try_to { 1/0 } # will not raise an exception
 
-You can customize which excpetions to catch:
+The default error handling strategy is to just return `nil`, but there are various ways you can customize this behavior. All handlers can either be simple values or an object responding to `#call`, which should take one argument, the exception object:
 
-    TryIt.exceptions << ZeroDivisionError
-    tryit { 1/0 }  # will not raise exceptions
+First off you can specify a handler with the call:
 
-There's also the possibility to define your own exception handlers:
+    # use a handler function
+    try_to(-> e {puts e.class}) { 1.foo } # prints "NoMethodError"
+    # or provide a simple value:
+    try_to(42) { 1.foo } #=> 42
 
-    TryIt.handler = lambda { |_| puts "message from tryit" }
-    tryit { raise NoMethodError } # will print "message from tryit"
+Alternatively you can define specific handlers for different exception classes:
+
+    TryTo.handlers #=> {}
+    TryTo.add_handler(ZeroDivisionError, -> _ { puts "Ouch" })
+    try_to { 1/0 } # prints "Ouch"
+    TryTo.add_handler(NoMethodError, -> _ { 23 })
+    try_to { 1.foo } #=> 23
+    # or simply
+    TryTo.add_handler(NoMethodError, 42)
+    try_to { 1.foo } #=> 42
+
+ Last but not least you can define a default handler for all the exceptions listed in `TryTo.exceptions`.
+
+    TryTo.default_handler = 42
+    try_to { 1.foo } #=> 42
+    # or
+    TryTo.default_handler = lambda { |_| puts "Something went wrong!" }
+    try_to { 1.foo } # Outputs: Something went wrong!
+
+Here's a complete example in the form of an IRB transcript:
+
+    # default behavior
+    try_to #=> nil
+    try_to {} #=> nil
+    class Foo ; end
+    try_to { Foo.new.foo } #=> nil
+
+    # this will raise an exception
+    try_to { 1 / 0 }
+    ZeroDivisionError: divided by 0
+    # let's fix that
+    TryTo.exceptions << ZeroDivisionError #=> [NoMethodError, ZeroDivisionError]
+    try_to { 1 / 0 } #=> nil
+
+    # change the default handler
+    TryTo.default_handler = -> e { puts e.class }
+    try_to { 1 / 0 } # prints "ZeroDivisionError"
+    try_to { Foo.new.foo } # prints "ZeroDivisionError"
+
+    # new behavior for ZeroDivisionError
+    TryTo.add_handler(ZeroDivisionError, -> _ { puts "You shouldn't divide by 0!"})
+    try_to { 1 / 0 } # prints: "You shouldn't divide by 0!"
+    try_to { Foo.new.foo} # still prints "NoMethodError"
+
+    # change handler at call site
+    try_to(-> _ {puts "Ouch!"}) { Foo.new.foo } # prints "Ouch!"
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'tryit'
+    gem 'try_to'
 
 And then execute:
 
@@ -36,11 +83,11 @@ And then execute:
 
 Or install it yourself:
 
-    $ gem install tryit
+    $ gem install try_to
 
-## Todo
+## Authors
 
-* Find a way to make the exception list not global.
+[Michael Kohl](https://github.com/citizen428). There's some leftover code (primarily in the specs) from [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit) by [Sergey Gopkalo](https://github.com/sevenmaxis/).
 
 ## License
 

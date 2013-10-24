@@ -1,6 +1,6 @@
 require 'rspec/core/rake_task'
 require 'fileutils'
-GEMSPEC = 'tryit.gemspec'
+GEMSPEC = 'try_to.gemspec'
 
 task :default => :spec
 
