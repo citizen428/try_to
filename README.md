@@ -91,7 +91,7 @@ Or install it yourself:
 
 ## License
 
-Lincesend under the MIT license. See the provided LICENSE file for details.
+Licensed under the MIT license. See the provided LICENSE file for details.
 
 ## Contributing
 
