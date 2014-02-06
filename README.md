@@ -100,3 +100,7 @@ Licensed under the MIT license. See the provided LICENSE file for details.
 3. Commit your changes (`git commit -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/citizen428/try_to/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
