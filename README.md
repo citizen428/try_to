@@ -1,5 +1,7 @@
 # try_to
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/citizen428/try_to/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 This project started with a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428), which eventually lead to a prototype at [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit). `try_to` is an improved version based on the experience gained from that project, but allows for much more sophisticated error handling (in less than 30 lines of Ruby).
 
 Instead of using Rails' `Object#try` like this,
@@ -102,5 +104,4 @@ Licensed under the MIT license. See the provided LICENSE file for details.
 5. Create new Pull Request
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/citizen428/try_to/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
