@@ -1,26 +1,24 @@
 module TryTo
   class << self
-    attr_accessor :exceptions, :default_handler, :handlers
-    private :handlers=
+    attr_accessor :default_handler
+    attr_reader :exceptions, :handlers
   end
 
   def self.add_handler(exception, handler)
-    self.handlers.merge!(exception => handler)
+    @handlers.merge!(exception => handler)
   end
 
-  self.handlers = {}
-  self.exceptions = [NoMethodError]
+  @handlers = {}
+  @exceptions = [NoMethodError]
 end
 
 module Kernel
-  def try_to(handler = nil, &block)
-    block.call if block
+  def try_to(handler = nil)
+    yield if block_given?
   rescue *(TryTo.exceptions | TryTo.handlers.keys) => e
-    handler = [
-               handler,
+    handler = [handler,
                TryTo.handlers[e.class],
-               TryTo.default_handler
-              ].compact.first
+               TryTo.default_handler].compact.first
     handler.respond_to?(:call) ? handler.call(e) : handler
   end
 
