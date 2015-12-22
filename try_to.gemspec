@@ -12,6 +12,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'try_to'
   gem.require_paths = ['lib']
   gem.version       = '1.1'
+  gem.license       = "MIT"
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec', '~>2.9.0'
