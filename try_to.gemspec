@@ -1,19 +1,28 @@
-# -*- encoding: utf-8 -*-
-Gem::Specification.new do |gem|
-  gem.authors       = ['Michael Kohl']
-  gem.email         = ['citizen428@gmail.com']
-  gem.description   = %q{Try methods without exceptions}
-  gem.summary       = %q{An alternative approach to Rails' Object#try}
-  gem.homepage      = 'https://github.com/citizen428/try_to'
 
-  gem.files         = `git ls-files`.split($\)
-  gem.executables   = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = 'try_to'
-  gem.require_paths = ['lib']
-  gem.version       = '1.1'
-  gem.license       = "MIT"
+lib = File.expand_path('lib', __dir__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'try_to/version'
 
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'rspec', '~>2.9.0'
+Gem::Specification.new do |spec|
+  spec.name          = 'try_to'
+  spec.version       = TryTo::VERSION
+  spec.authors       = ['Michael Kohl']
+  spec.email         = ['citizen428@gmail.com']
+
+  spec.summary       = "An alternative approach to Rails' Object#try"
+  spec.description   = 'Try methods without exceptions'
+  spec.homepage      = 'https://github.com/citizen428/try_to'
+  spec.license       = 'MIT'
+
+  spec.metadata = {
+    'bug_tracker_uri' => 'https://github.com/citizen428/try_to/issues',
+    'source_code_uri' => 'https://github.com/citizen428/try_to'
+  }
+
+  spec.files = `git ls-files -z *.md LICENSE.txt lib`.split("\0")
+  spec.require_paths = ['lib']
+
+  spec.add_development_dependency 'bundler', '~> 1.16'
+  spec.add_development_dependency 'minitest', '~> 5.0'
+  spec.add_development_dependency 'rake', '~> 10.0'
 end
