@@ -13,13 +13,14 @@ module TryTo
 
     def remove_handler!(exception)
       @handlers.delete(exception)
+      @handlers
     end
 
     def add_exception(exception)
       @exceptions << exception
     end
 
-    def remove_exception(exception)
+    def remove_exception!(exception)
       @exceptions -= [exception]
     end
 
