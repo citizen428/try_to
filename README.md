@@ -3,7 +3,12 @@
 [![Build Status](https://travis-ci.org/citizen428/try_to.svg)](https://travis-ci.org/citizen428/methodfinder)
 [![Gem Version](https://img.shields.io/gem/v/try_to.svg)](https://rubygems.org/gems/methodfinder)
 
-This project started with a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428), which eventually lead to a prototype at [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit). `try_to` is an improved version based on the experience gained from that project, but allows for much more sophisticated error handling (in less than 30 lines of Ruby).
+This project started with a StackOverflow discussion between [Sergey Gopkalo](https://github.com/sevenmaxis/) and [Michael Kohl](https://github.com/citizen428),
+which eventually lead to a prototype at [sevenmaxis/tryit](https://github.com/sevenmaxis/tryit).
+`try_to` is an improved version based on the experience gained from that project,
+but allows for much more sophisticated error handling.
+
+## Usage
 
 Instead of using Rails' `Object#try` like this,
 
@@ -13,38 +18,74 @@ you can do this:
 
     try_to { obj.met1.met2.met3.to_s }
 
-It's possible to customize which exceptions to handle:
+### Exceptions
 
-    TryTo.exceptions << ZeroDivisionError
+It's possible to customize which exceptions to handle with `add_exception`:
+
+    TryTo.add_exception(ZeroDivisionError)
+    #=> [NoMethodError, ZeroDivisionError]
     try_to { 1/0 } # will not raise an exception
 
-The default error handling strategy is to just return `nil`, but there are various ways you can customize this behavior. All handlers can either be simple values or an object responding to `#call`, which should take one argument, the exception object:
+To remove an exception, use `remove_exception!`:
 
-First off you can specify a handler with the call:
+    TryTo.exceptions
+    #=> [NoMethodError, ZeroDivisionError]
+    TryTo.remove_exception!(ZeroDivisionError)
+    #=> [NoMethodError]
+
+You can also use `reset_exceptions!` to go back to only handle `NoMethodError`s.
+
+    TryTo.exceptions
+    #=> [NoMethodError, RuntimeError, ZeroDivisionError]
+    TryTo.reset_exceptions!
+    #=> [NoMethodError]
+
+### Handlers
+
+The default error handling strategy is to just return `nil`, but there are various
+ways in which you can customize this behavior. All handlers can either be simple
+values or an object responding to `#call`, which should take one argument, the
+exception object.
+
+Specifying a handler with the call for one time use:
 
     # use a handler function
-    try_to(-> e {puts e.class}) { 1.foo } # prints "NoMethodError"
+    try_to(-> e { puts e.class }) { 1.foo }
+    # prints "NoMethodError"
     # or provide a simple value:
-    try_to(42) { 1.foo } #=> 42
+    try_to(42) { 1.foo }
+    #=> 42
 
-Alternatively you can define specific handlers for different exception classes:
+Registering handlers so they always are used:
 
-    TryTo.handlers #=> {}
+    TryTo.handlers
+    #=> {}
     TryTo.add_handler(ZeroDivisionError, -> _ { puts "Ouch" })
-    try_to { 1/0 } # prints "Ouch"
+    try_to { 1/0 }
+    # prints "Ouch"
     TryTo.add_handler(NoMethodError, -> _ { 23 })
-    try_to { 1.foo } #=> 23
+    try_to { 1.foo }
+    #=> 23
     # or simply
     TryTo.add_handler(NoMethodError, 42)
     try_to { 1.foo } #=> 42
 
- Last but not least you can define a default handler for all the exceptions listed in `TryTo.exceptions`.
+Removing handler:
+
+    TryTo.handlers
+    #=> {ZeroDivisionError=>#<Proc:0x0000000108921d60@(irb):1 (lambda)>}
+    TryTo.remove_handler!(ZeroDivisionError)
+    #=> {}
+
+Last but not least you can define a default handler for all the exceptions
+listed in `TryTo.exceptions`.
 
     TryTo.default_handler = 42
     try_to { 1.foo } #=> 42
     # or
     TryTo.default_handler = lambda { |_| puts "Something went wrong!" }
-    try_to { 1.foo } # Outputs: Something went wrong!
+    try_to { 1.foo }
+    # Outputs: Something went wrong!
 
 Here's a complete example in the form of an IRB transcript:
 
@@ -98,11 +139,8 @@ Licensed under the MIT license. See the provided LICENSE file for details.
 
 ## Contributing
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
-
-
-
+1.  Fork it
+2.  Create your feature branch (`git checkout -b my-new-feature`)
+3.  Commit your changes (`git commit -am 'Added some feature'`)
+4.  Push to the branch (`git push origin my-new-feature`)
+5.  Create new Pull Request
