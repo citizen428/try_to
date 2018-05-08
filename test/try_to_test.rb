@@ -67,6 +67,7 @@ describe Kernel do
         assert_nil(try_to { 1 / 0 })
 
         TryTo.reset_exceptions!
+        assert_equal(TryTo.exceptions, [NoMethodError])
       end
     end
 
@@ -81,6 +82,7 @@ describe Kernel do
         TryTo.add_handler(TypeError, ->(e) { puts e.class })
         assert_output(/TypeError/) { try_to { raise TypeError } }
         TryTo.remove_handler!(TypeError)
+        assert_nil TryTo.handlers[TypeError]
       end
 
       it 'can specify a handler on the fly' do
