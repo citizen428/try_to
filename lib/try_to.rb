@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TryTo
   @handlers = {}
   @exceptions = [NoMethodError]
@@ -34,9 +36,7 @@ module Kernel
   private def try_to(handler = nil)
     yield if block_given?
   rescue *(TryTo.exceptions | TryTo.handlers.keys) => e
-    handler = [handler,
-               TryTo.handlers[e.class],
-               TryTo.default_handler].compact.first
+    handler = handler || TryTo.handlers[e.class] || TryTo.default_handler
     handler.respond_to?(:call) ? handler.call(e) : handler
   end
 end
