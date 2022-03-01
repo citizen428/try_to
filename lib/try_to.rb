@@ -9,13 +9,11 @@ module TryTo
     attr_reader :exceptions, :handlers
 
     def add_handler(exception, handler)
-      @handlers[exception] = handler
-      @handlers
+      @handlers.tap { |h| h[exception] = handler }
     end
 
     def remove_handler!(exception)
-      @handlers.delete(exception)
-      @handlers
+      @handlers.tap { |h| h.delete(exception) }
     end
 
     def add_exception(exception)
