@@ -124,7 +124,7 @@ try_to { Foo.new.foo } #=> nil (instead of NoMethodError)
 try_to { 1 / 0 }
 ZeroDivisionError: divided by 0
 # let's fix that
-TryTo.exceptions << ZeroDivisionError #=> [NoMethodError, ZeroDivisionError]
+TryTo.add_exception(ZeroDivisionError) #=> [NoMethodError, ZeroDivisionError]
 try_to { 1 / 0 } #=> nil
 
 # change the default handler
