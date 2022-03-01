@@ -130,7 +130,7 @@ try_to { 1 / 0 } #=> nil
 # change the default handler
 TryTo.default_handler = -> e { puts e.class }
 try_to { 1 / 0 } # prints "ZeroDivisionError"
-try_to { Foo.new.foo } # prints "ZeroDivisionError"
+try_to { Foo.new.foo } # prints "NoMethodError"
 
 # new behavior for ZeroDivisionError
 TryTo.add_handler(ZeroDivisionError, -> _ { puts "You shouldn't divide by 0!"})
